@@ -23,8 +23,8 @@ function drawPattern2() {
   stroke(0); 
   strokeWeight(2);
 
-  for (let x = 50; x < 750; x += 100) {
-    for (let y = 50; y < 750; y += 100) {
+  for (let x = 52; x < 750; x += 100) {
+    for (let y = 51; y < 750; y += 100) {
       rect(x, y, 80, 80);
     }
   }
@@ -35,12 +35,10 @@ function drawPattern3() {
   stroke(0);
   strokeWeight(3);
 
-  // Draw lines
-  for (let i = 50; i <= 750; i += 50) {
+  for (let i = 51; i <= 750; i += 50) {
     line(i, 50, i, 750);
   }
 
-  // Draw arcs
   for (let i = 100; i <= 700; i += 100) {
     arc(i, 400, 100, 100, 0, PI);
   }
