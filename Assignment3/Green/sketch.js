@@ -5,7 +5,7 @@ let numFrames = 4;
 let speed = 2;
 
 function preload() {
-    spriteSheet = loadImage('character_sprites.png'); // Replace with actual file path
+    spriteSheet = loadImage('character_sprites.png');
 }
 
 function setup() {
