@@ -5,7 +5,7 @@ let numFrames = 4;
 let speed = 2;
 
 function preload() {
-    spriteSheet = loadImage('character_sprites.png');
+    spriteSheet = loadImage('Green.png');
 }
 
 function setup() {
@@ -46,10 +46,6 @@ class Character {
         this.moving = false;
     }
 
-    getSprite(index) {
-        return this.Sheet.get(index * spriteSize, this.row * spriteSize, spriteSize, spriteSize);
-    }
-
     move(dir) {
         this.direction = dir;
         this.moving = true;
@@ -69,15 +65,17 @@ class Character {
     }
 
     show() {
-        let img = this.getSprite(this.frame);
+        let sx = this.frame * spriteSize;
+        let sy = this.row * spriteSize;
+        
         if (this.direction === "left") {
             push();
+            translate(this.x + spriteSize, this.y);
             scale(-1, 1);
-            image(img, -this.x - spriteSize, this.y);
+            image(this.Sheet, 0, 0, spriteSize, spriteSize, sx, sy, spriteSize, spriteSize);
             pop();
         } else {
-            image(img, this.x, this.y);
+            image(this.Sheet, this.x, this.y, spriteSize, spriteSize, sx, sy, spriteSize, spriteSize);
         }
     }
 }
-
