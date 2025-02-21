@@ -10,6 +10,7 @@ function preload() {
 
 function setup() {
     createCanvas(800, 600);
+    
     for (let i = 0; i < 6; i++) {
         let sheet = spriteSheets[i % spriteSheets.length];
         characters.push(new Character(random(width - spriteSize), random(height - spriteSize), sheet));
@@ -69,7 +70,7 @@ class Character {
     show() {
         let sx = this.frame * spriteSize;
         let sy = 0;
-        
+
         if (this.direction === "left") {
             push();
             translate(this.x + spriteSize, this.y);
