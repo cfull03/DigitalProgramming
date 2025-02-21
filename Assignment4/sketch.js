@@ -8,7 +8,7 @@ let frame = 0;
 
 function preload() {
     for (let i = 1; i <= 7; i++) { 
-        bugImages.push(loadImage(`bug${i}.png`));
+        bugImages.push(loadImage(`bug${i}.png`)); // Fix incorrect string interpolation
     }
     bugSquishedImage = loadImage("bug_squished.png");
 }
@@ -37,11 +37,15 @@ class Bug {
     
     draw() {
         push();
+        translate(this.x + BUG_SIZE / 2, this.y + BUG_SIZE / 2);
         if (this.direction === -1) {
             scale(-1, 1);
-            image(bugImages[this.frameIndex], -this.x - BUG_SIZE, this.y, BUG_SIZE, BUG_SIZE);
+        }
+        imageMode(CENTER);
+        if (this.squished) {
+            image(bugSquishedImage, 0, 0, BUG_SIZE, BUG_SIZE);
         } else {
-            image(bugImages[this.frameIndex], this.x, this.y, BUG_SIZE, BUG_SIZE);
+            image(bugImages[this.frameIndex], 0, 0, BUG_SIZE, BUG_SIZE);
         }
         pop();
     }
@@ -83,12 +87,14 @@ function draw() {
     } else {
         textSize(32);
         fill(0);
-        text("Game Over!", width / 2 - 80, height / 2);
-        text(`Bugs Squished: ${squishCount}`, width / 2 - 100, height / 2 + 40);
+        textAlign(CENTER, CENTER);
+        text("Game Over!", width / 2, height / 2 - 20);
+        text(`Bugs Squished: ${squishCount}`, width / 2, height / 2 + 20);
     }
     
     textSize(24);
     fill(0);
+    textAlign(LEFT, TOP);
     text(`Time Left: ${timeLeft}`, 20, 30);
     text(`Bugs Squished: ${squishCount}`, 20, 60);
 }
