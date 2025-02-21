@@ -1,18 +1,17 @@
 let characters = [];
-let spriteSheets = [];
+let spriteSheet;
 let spriteSize = 80;
 let numFrames = 4;
 let speed = 2;
 
 function preload() {
-    spriteSheets.push(loadImage('spelunky_sprites.png'));
+    spriteSheet = loadImage('spelunky_sprites.png');
 }
 
 function setup() {
     createCanvas(800, 600);
     for (let i = 0; i < 3; i++) {
-        let sheet = spriteSheets[i % spriteSheets.length];
-        characters.push(new Character(random(width - spriteSize), random(height - spriteSize), sheet, i));
+        characters.push(new Character(random(width - spriteSize), random(height - spriteSize), spriteSheet, i));
     }
 }
 
@@ -47,8 +46,8 @@ class Character {
         this.moving = false;
     }
 
-    getSprite(index) {
-        return this.spriteSheet.get(index * spriteSize, this.row * spriteSize, spriteSize, spriteSize);
+    getSprite() {
+        return this.spriteSheet.get(this.frame * spriteSize, this.row * spriteSize, spriteSize, spriteSize);
     }
 
     move(dir) {
@@ -62,7 +61,9 @@ class Character {
 
     update() {
         if (this.moving) {
-            this.frame = (this.frame + 1) % numFrames;
+            if (frameCount % 6 === 0) {
+                this.frame = (this.frame + 1) % numFrames;
+            }
             this.x += this.direction === "right" ? speed : -speed;
         } else {
             this.frame = 0;
@@ -70,11 +71,13 @@ class Character {
     }
 
     show() {
-        let img = this.getSprite(this.frame);
+        let img = this.getSprite();
+        
         if (this.direction === "left") {
             push();
+            translate(this.x + spriteSize, this.y);
             scale(-1, 1);
-            image(img, -this.x - spriteSize, this.y);
+            image(img, 0, 0);
             pop();
         } else {
             image(img, this.x, this.y);
