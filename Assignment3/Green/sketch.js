@@ -1,17 +1,18 @@
 let characters = [];
-let spriteSheet;
+let spriteSheets = [];
 let spriteSize = 80;
 let numFrames = 4;
 let speed = 2;
 
 function preload() {
-    spriteSheet = loadImage('Green.png');
+    spriteSheets.push(loadImage('Green.png'));
 }
 
 function setup() {
     createCanvas(800, 600);
-    for (let i = 0; i < 3; i++) {
-        characters.push(new Character(random(width - spriteSize), random(height - spriteSize), spriteSheet, i));
+    for (let i = 0; i < 6; i++) {
+        let sheet = spriteSheets[i % spriteSheets.length];
+        characters.push(new Character(random(width - spriteSize), random(height - spriteSize), sheet));
     }
 }
 
@@ -36,11 +37,10 @@ function keyReleased() {
 }
 
 class Character {
-    constructor(x, y, Sheet, row) {
+    constructor(x, y, sheet) {
         this.x = x;
         this.y = y;
-        this.Sheet = Sheet;
-        this.row = row;
+        this.sheet = sheet;
         this.frame = 0;
         this.direction = "right";
         this.moving = false;
@@ -57,7 +57,9 @@ class Character {
 
     update() {
         if (this.moving) {
-            this.frame = (this.frame + 1) % numFrames;
+            if (frameCount % 6 === 0) {
+                this.frame = (this.frame + 1) % numFrames;
+            }
             this.x += this.direction === "right" ? speed : -speed;
         } else {
             this.frame = 0;
@@ -66,16 +68,16 @@ class Character {
 
     show() {
         let sx = this.frame * spriteSize;
-        let sy = this.row * spriteSize;
+        let sy = 0;
         
         if (this.direction === "left") {
             push();
             translate(this.x + spriteSize, this.y);
             scale(-1, 1);
-            image(this.Sheet, 0, 0, spriteSize, spriteSize, sx, sy, spriteSize, spriteSize);
+            image(this.sheet, 0, 0, spriteSize, spriteSize, sx, sy, spriteSize, spriteSize);
             pop();
         } else {
-            image(this.Sheet, this.x, this.y, spriteSize, spriteSize, sx, sy, spriteSize, spriteSize);
+            image(this.sheet, this.x, this.y, spriteSize, spriteSize, sx, sy, spriteSize, spriteSize);
         }
     }
 }
