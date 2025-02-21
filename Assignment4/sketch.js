@@ -4,13 +4,27 @@ const BUG_SIZE = 50;
 let squishCount = 0;
 let timeLeft = 30;
 let gameRunning = true;
-let frame = 0;
 
 function preload() {
-    for (let i = 1; i <= 7; i++) { 
-        bugImages.push(loadImage(`bug${i}.png`)); // Fix incorrect string interpolation
+    for (let i = 1; i <= 7; i++) {
+        bugImages.push(loadImage(`bug${i}.png`));
     }
     bugSquishedImage = loadImage("bug_squished.png");
+}
+
+function setup() {
+    createCanvas(800, 600);
+    for (let i = 0; i < 5; i++) {
+        bugs.push(new Bug());
+    }
+    setInterval(() => {
+        if (gameRunning) {
+            timeLeft--;
+            if (timeLeft <= 0) {
+                gameRunning = false;
+            }
+        }
+    }, 1000);
 }
 
 class Bug {
@@ -27,7 +41,7 @@ class Bug {
         if (!this.squished) {
             this.x += this.speed * this.direction;
             if (this.x < 0 || this.x > width - BUG_SIZE) {
-                this.direction *= -1;  
+                this.direction *= -1;
             }
             if (frameCount % 10 === 0) {
                 this.frameIndex = (this.frameIndex + 1) % bugImages.length;
@@ -42,38 +56,17 @@ class Bug {
             scale(-1, 1);
         }
         imageMode(CENTER);
-        if (this.squished) {
-            image(bugSquishedImage, 0, 0, BUG_SIZE, BUG_SIZE);
-        } else {
-            image(bugImages[this.frameIndex], 0, 0, BUG_SIZE, BUG_SIZE);
-        }
+        image(this.squished ? bugSquishedImage : bugImages[this.frameIndex], 0, 0, BUG_SIZE, BUG_SIZE);
         pop();
     }
     
     checkClick(mx, my) {
-        if (!this.squished) {
-            if (mx > this.x && mx < this.x + BUG_SIZE && my > this.y && my < this.y + BUG_SIZE) {
-                this.squished = true;
-                squishCount++;
-                this.speed += 0.5;
-            }
+        if (!this.squished && mx > this.x && mx < this.x + BUG_SIZE && my > this.y && my < this.y + BUG_SIZE) {
+            this.squished = true;
+            squishCount++;
+            this.speed += 0.5;
         }
     }
-}
-
-function setup() {
-    createCanvas(800, 600);
-    for (let i = 0; i < 5; i++) {
-        bugs.push(new Bug());
-    }
-    setInterval(() => {
-        if (gameRunning) {
-            timeLeft--;
-            if (timeLeft <= 0) {
-                gameRunning = false;
-            }
-        }
-    }, 1000);
 }
 
 function draw() {
