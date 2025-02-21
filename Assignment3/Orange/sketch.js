@@ -6,7 +6,7 @@ const speed = 2;
 const frameDelay = 6;
 
 function preload() {
-    spriteSheet = loadImage('spelunky_sprites.png');
+    spriteSheet = loadImage('SpelunkyGuy.png');
 }
 
 function setup() {
