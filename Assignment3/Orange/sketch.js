@@ -1,8 +1,9 @@
 let characters = [];
 let spriteSheet;
-let spriteSize = 80;
-let numFrames = 4;
-let speed = 2;
+const spriteSize = 80;
+const numFrames = 4;
+const speed = 2;
+const frameDelay = 6;
 
 function preload() {
     spriteSheet = loadImage('spelunky_sprites.png');
@@ -50,8 +51,8 @@ class Character {
         return this.spriteSheet.get(this.frame * spriteSize, this.row * spriteSize, spriteSize, spriteSize);
     }
 
-    move(dir) {
-        this.direction = dir;
+    move(direction) {
+        this.direction = direction;
         this.moving = true;
     }
 
@@ -61,26 +62,25 @@ class Character {
 
     update() {
         if (this.moving) {
-            if (frameCount % 6 === 0) {
+            if (frameCount % frameDelay === 0) {
                 this.frame = (this.frame + 1) % numFrames;
             }
-            this.x += this.direction === "right" ? speed : -speed;
+            this.x += (this.direction === "right" ? speed : -speed);
         } else {
             this.frame = 0;
         }
     }
 
     show() {
-        let img = this.getSprite();
-        
+        let sprite = this.getSprite();
+        push();
         if (this.direction === "left") {
-            push();
             translate(this.x + spriteSize, this.y);
             scale(-1, 1);
-            image(img, 0, 0);
-            pop();
+            image(sprite, 0, 0);
         } else {
-            image(img, this.x, this.y);
+            image(sprite, this.x, this.y);
         }
+        pop();
     }
 }
