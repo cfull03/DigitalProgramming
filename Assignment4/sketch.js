@@ -8,9 +8,10 @@ let frame = 0;
 
 function preload() {
     for (let i = 1; i <= 7; i++) { 
-        bugImages.push(loadImage(`bug{i}.png`));
+        bugImages.push(loadImage(`bug${i}.png`));
     }
     bugSquishedImage = loadImage("bug_squished.png");
+}
 
 class Bug {
     constructor() {
@@ -98,5 +99,4 @@ function mousePressed() {
             bug.checkClick(mouseX, mouseY);
         }
     }
-}
 }
