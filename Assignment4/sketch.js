@@ -1,101 +1,111 @@
 let bugs = [];
-let bugImages = [], bugSquishedImage;
-const BUG_SIZE = 50;
-let squishCount = 0;
-let timeLeft = 30;
-let gameRunning = true;
+let squishedImage;
+let bugSpritesheet;
+let numFrames = 7;
+let timer = 30;
+let score = 0;
+let gameOver = false;
 
 function preload() {
-    for (let i = 1; i <= 7; i++) {
-        bugImages.push(loadImage(`bug${i}.png`));
-    }
-    bugSquishedImage = loadImage("bug_squished.png");
+    bugSpritesheet = loadImage('bug.png');
+    squishedImage = loadImage('bug_squished.png'); 
 }
 
 function setup() {
     createCanvas(800, 600);
     for (let i = 0; i < 5; i++) {
-        bugs.push(new Bug());
+        bugs.push(new Bug(random(width), random(height)));
     }
     setInterval(() => {
-        if (gameRunning) {
-            timeLeft--;
-            if (timeLeft <= 0) {
-                gameRunning = false;
-            }
+        if (timer > 0) {
+            timer--;
+        }else{
+            gameOver = true;
         }
     }, 1000);
 }
 
-class Bug {
-    constructor() {
-        this.x = random(0, width - BUG_SIZE);
-        this.y = random(0, height - BUG_SIZE);
-        this.squished = false;
-        this.speed = random(1, 3);
-        this.direction = random([-1, 1]);
-        this.frameIndex = 0;
-    }
-    
-    move() {
-        if (!this.squished) {
-            this.x += this.speed * this.direction;
-            if (this.x < 0 || this.x > width - BUG_SIZE) {
-                this.direction *= -1;
-            }
-            if (frameCount % 10 === 0) {
-                this.frameIndex = (this.frameIndex + 1) % bugImages.length;
-            }
-        }
-    }
-    
-    draw() {
-        push();
-        translate(this.x + BUG_SIZE / 2, this.y + BUG_SIZE / 2);
-        if (this.direction === -1) {
-            scale(-1, 1);
-        }
-        imageMode(CENTER);
-        image(this.squished ? bugSquishedImage : bugImages[this.frameIndex], 0, 0, BUG_SIZE, BUG_SIZE);
-        pop();
-    }
-    
-    checkClick(mx, my) {
-        if (!this.squished && mx > this.x && mx < this.x + BUG_SIZE && my > this.y && my < this.y + BUG_SIZE) {
-            this.squished = true;
-            squishCount++;
-            this.speed += 0.5;
-        }
-    }
-}
-
 function draw() {
-    background(255);
+    background(220);
     
-    if (gameRunning) {
-        for (let bug of bugs) {
-            bug.move();
-            bug.draw();
-        }
-    } else {
+    if (gameOver) {
         textSize(32);
-        fill(0);
         textAlign(CENTER, CENTER);
-        text("Game Over!", width / 2, height / 2 - 20);
-        text(`Bugs Squished: ${squishCount}`, width / 2, height / 2 + 20);
+        fill(0);
+        text(`Game Over! Score: ${score}`, width / 2, height / 2);
+        return;
     }
     
-    textSize(24);
+    for (let bug of bugs) {
+        bug.update();
+        bug.display();
+    }
+    
     fill(0);
-    textAlign(LEFT, TOP);
-    text(`Time Left: ${timeLeft}`, 20, 30);
-    text(`Bugs Squished: ${squishCount}`, 20, 60);
+    textSize(24);
+    text(`Score: ${score}`, 10, 30);
+    text(`Time: ${timer}`, 10, 60);
 }
 
 function mousePressed() {
-    if (gameRunning) {
-        for (let bug of bugs) {
-            bug.checkClick(mouseX, mouseY);
+    for (let bug of bugs) {
+        if (!bug.squished && bug.clicked(mouseX, mouseY)) {
+            bug.squish();
+            score++;
         }
+    }
+}
+
+class Bug {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.speed = random(1, 3);
+        this.direction = p5.Vector.random2D();
+        this.squished = false;
+        this.squishTimer = 0;
+        this.frame = 0;
+    }
+    
+    update() {
+        if (!this.squished) {
+            this.x += this.direction.x * this.speed;
+            this.y += this.direction.y * this.speed;
+            this.bounce();
+            this.frame = (this.frame + 0.2) % numFrames;
+        } else if (frameCount - this.squishTimer > 30) {
+            this.respawn();
+        }
+    }
+    
+    display() {
+        if (this.squished) {
+            image(squishedImage, this.x, this.y, 50, 50);
+        } else {
+            let spriteX = floor(this.frame) * 50;
+            image(bugSpritesheet, this.x, this.y, 50, 50, spriteX, 0, 50, 50);
+        }
+    }
+    
+    clicked(mx, my) {
+        return dist(mx, my, this.x + 25, this.y + 25) < 25;
+    }
+    
+    squish() {
+        this.squished = true;
+        this.squishTimer = frameCount;
+    }
+    
+    respawn() {
+        this.x = random(width);
+        this.y = random(height);
+        this.speed += 0.5;
+        this.direction = p5.Vector.random2D();
+        this.squished = false;
+    }
+    
+    bounce() {
+        if (this.x < 0 || this.x > width) this.direction.x *= -1;
+        if (this.y < 0 || this.y > height) this.direction.y *= -1;
     }
 }
