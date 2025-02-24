@@ -6,10 +6,11 @@ let numFrames = 7;
 let timer = 30;
 let score = 0;
 let gameOver = false;
-let spawnRate = 5000;
+let spawnRate = 5000; // New bug every 5 seconds
 let frameWidth = 50;
 let frameHeight = 50;
 let frameRateSpeed = 0.2;
+let maxBugs = 10;
 
 function preload() {
     bugSpritesheet = loadImage('bug.png');
@@ -29,12 +30,12 @@ function setup() {
         }
     }, 1000);
     setInterval(() => {
-        if (!gameOver) bugs.push(new Bug(random(width), random(height)));
+        if (!gameOver && bugs.length < maxBugs) bugs.push(new Bug(random(width), random(height)));
     }, spawnRate);
 }
 
 function draw() {
-    background(220);
+    background(200, 230, 255); 
     
     if (gameOver) {
         textSize(32);
@@ -54,6 +55,7 @@ function draw() {
     textSize(24);
     text(`Score: ${score}`, 10, 30);
     text(`Time: ${timer}`, 10, 60);
+    text(`Bugs: ${bugs.length}`, 10, 90);
 }
 
 function mousePressed() {
