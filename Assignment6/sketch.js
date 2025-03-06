@@ -1,60 +1,34 @@
-let lightningImg;
-let playThunder = false;
-let osc, noise, env, filter, lfo;
-
-function preload() {
-  lightningImg = loadImage('Lightning.jpeg');
-}
+let synth;
+let reverb;
+let keys = {
+  'A': 'C4', 'W': 'C#4', 'S': 'D4', 'E': 'D#4', 'D': 'E4',
+  'F': 'F4', 'T': 'F#4', 'G': 'G4', 'Y': 'G#4', 'H': 'A4',
+  'U': 'A#4', 'J': 'B4', 'K': 'C5'
+};
 
 function setup() {
   createCanvas(600, 400);
   textSize(20);
   textAlign(CENTER, CENTER);
   
-  osc = new p5.Oscillator('sine');
-  noise = new p5.Noise('white'); 
-  env = new p5.Envelope();
-  filter = new p5.Filter('lowpass');
-  lfo = new p5.Oscillator('sine');
+  synth = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: "square" },
+    envelope: { attack: 0.1, decay: 0.2, sustain: 0.4, release: 1.2 }
+  }).toDestination();
   
-  env.setADSR(0.05, 0.2, 0.3, 1.5);
-  env.setRange(0.8, 0);
-  
-  osc.freq(50);
-  osc.amp(0);
-  osc.disconnect();
-  osc.connect(filter);
-  
-  noise.amp(0);
-  noise.disconnect();
-  noise.connect(filter);
-  
-  filter.freq(200);
-  
-  lfo.freq(0.5);
-  lfo.amp(100);
-  lfo.start();
-  lfo.disconnect();
-  lfo.connect(filter.freq);
+  reverb = new Tone.Reverb({ decay: 2, wet: 0.5 }).toDestination();
+  synth.connect(reverb);
 }
 
 function draw() {
-  background(0);
+  background(30);
   fill(255);
-  if (playThunder) {
-    image(lightningImg, 100, 50, 400, 300);
-  } else {
-    text("Click to summon lightning!", width / 2, height / 2);
-  }
+  text("Press keys A-K to play notes", width / 2, height / 2);
 }
 
-function mousePressed() {
-  playThunder = true;
-  setTimeout(() => { playThunder = false; }, 300);
-  
-  noise.start();
-  env.play(noise);
-  
-  osc.start();
-  env.play(osc);
+function keyPressed() {
+  let note = keys[key.toUpperCase()];
+  if (note) {
+    synth.triggerAttackRelease(note, "0.5");
+  }
 }
