@@ -3,7 +3,7 @@ let playThunder = false;
 let osc, noise, env, filter, lfo;
 
 function preload() {
-  lightningImg = loadImage('Lightning.jpeg');
+  lightningImg = loadImage('lightning.jpeg');
 }
 
 function setup() {
