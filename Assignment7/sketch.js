@@ -1,7 +1,7 @@
 let lightningImg;
 let playThunder = false;
 let audioStarted = false;
-let osc, noise, env, filter, lfo;
+let osc, noise, env, filter;
 let imgLoaded = false;
 
 function preload() {
@@ -28,26 +28,27 @@ function initAudio() {
         osc = new p5.Oscillator('sine');
         noise = new p5.Noise('white');
         env = new p5.Envelope();
-        filter = new p5.LowPass();
+        filter = new p5.Filter('lowpass');
 
         env.setADSR(0.05, 0.2, 0.3, 2.5);
         env.setRange(0.8, 0);
 
         osc.freq(50);
         osc.amp(0);
-        osc.disconnect();
-        osc.connect(filter);
-        filter.freq(200); 
 
+        filter.freq(200);
+
+        osc.disconnect();
         noise.disconnect();
+        osc.connect(filter);
         noise.connect(filter);
-        noise.amp(0);
+        filter.connect(p5.soundOut);
 
         osc.start();
         noise.start();
 
         audioStarted = true;
-        console.log("🎵 Audio Initialized");
+        console.log("Audio Initialized");
     }
 }
 
@@ -64,13 +65,13 @@ function draw() {
 
 function mousePressed() {
     if (!audioStarted) {
-        console.warn("⚠️ Audio not initialized. Click 'Enable Audio' first.");
+        console.warn("Audio not initialized. Click 'Enable Audio' first.");
         return;
     }
 
     playThunder = true;
     setTimeout(() => { playThunder = false; }, 1000);
 
-    env.play(noise);
     env.play(osc);
+    env.play(noise);
 }
