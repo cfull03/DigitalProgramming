@@ -1,9 +1,16 @@
 let lightningImg;
 let playThunder = false;
 let osc, noise, env, filter, lfo;
+let imgLoaded = false;
 
 function preload() {
-  lightningImg = loadImage('lightning.jpeg');
+  lightningImg = loadImage('lightning.jpeg', 
+    () => { 
+      console.log("Image loaded successfully"); 
+      imgLoaded = true; 
+    }, 
+    () => console.error("Error loading image! Check the file path.")
+  );
 }
 
 function setup() {
@@ -20,7 +27,6 @@ function setup() {
   env.setADSR(0.05, 0.2, 0.3, 2.5);
   env.setRange(0.8, 0);
 
-
   osc.freq(50);
   osc.amp(0);
   osc.disconnect();
@@ -30,7 +36,6 @@ function setup() {
   noise.disconnect();
   noise.connect(filter);
 
-
   filter.freq(200);
 
   lfo.freq(0.3); 
@@ -38,14 +43,13 @@ function setup() {
   lfo.start();
   lfo.disconnect();
   lfo.connect(filter.freq);
-
 }
 
 function draw() {
   background(0);
   fill(255);
 
-  if (playThunder) {
+  if (playThunder && imgLoaded) {
     image(lightningImg, 100, 50, 400, 300);
   } else {
     text("Click to summon lightning!", width / 2, height / 2);
