@@ -6,10 +6,10 @@ let imgLoaded = false;
 function preload() {
   lightningImg = loadImage('lightning.png', 
     () => { 
-      console.log("Image loaded successfully"); 
+      console.log("✅ Image loaded successfully"); 
       imgLoaded = true; 
     }, 
-    () => console.error("Error loading image! Check the file path.")
+    () => console.error("❌ Error loading image! Check the file path.")
   );
 }
 
@@ -17,6 +17,8 @@ function setup() {
   createCanvas(600, 400);
   textSize(20);
   textAlign(CENTER, CENTER);
+
+  console.log("Image Loaded Status: ", imgLoaded);
 
   osc = new p5.Oscillator('sine');
   noise = new p5.Noise('white'); 
@@ -49,7 +51,10 @@ function draw() {
   background(0);
   fill(255);
 
+  if (playThunder) console.log("⚡ Thunder activated - Attempting to display image");
+
   if (playThunder && imgLoaded) {
+    console.log("✅ Drawing image");
     image(lightningImg, 100, 50, 400, 300);
   } else {
     text("Click to summon lightning!", width / 2, height / 2);
