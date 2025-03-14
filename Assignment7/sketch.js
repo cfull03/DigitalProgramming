@@ -4,7 +4,7 @@ let osc, noise, env, filter, lfo;
 let imgLoaded = false;
 
 function preload() {
-  lightningImg = loadImage('lightning.jpeg', 
+  lightningImg = loadImage('lightning.png', 
     () => { 
       console.log("Image loaded successfully"); 
       imgLoaded = true; 
