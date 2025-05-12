@@ -1,48 +1,58 @@
-Zombie vs. Robots Game Documentation
-Zombie vs. Robots Game Project Documentation
-Project Overview
-Zombie vs. Robots is an interactive arcade-style game built using p5.js and Arduino. The player
-controls a team of deployable robots to stop waves of incoming zombies before they reach the base.
-The game integrates joystick hardware input via Arduino, creating a unique hybrid of software and
-physical controls.
-Technologies Used
-- p5.js (JavaScript framework for creative coding)
-- Arduino Uno with joystick and LEDs
-- Serial Communication via Web Serial API
-- Sound Effects & Music
-- Custom animations using sprite sheets
-Game Mechanics
-- Zombies spawn on the left and move to the right.
-- Robots are deployed on the right and walk leftward, destroying zombies on contact.
-- Explosions occur when robots hit zombies.
-- Lives decrease if zombies reach the end.
-- Score increases for each successful zombie elimination.
-Hardware Setup
+******Zombie vs. Robots Game Documentation******
+
+🎮 **Project Overview**
+
+Zombie vs. Robots is a fast-paced, arcade-style game that blends physical joystick input with on-screen action. Developed using p5.js and integrated with an Arduino Uno, players deploy robots to fend off waves of zombies before they reach the base. The project showcases a unique hybrid of software-based game development and hardware interaction, providing a highly immersive gameplay experience.
+
+🧰 **Technologies Used**
+
+p5.js – JavaScript library for creative coding and rendering animations
+Arduino Uno – Microcontroller for joystick and LED inputs/outputs
+Web Serial API – Enables communication between Arduino and browser
+Sprite Sheets – Custom animations for zombies, robots, and explosions
+Sound Effects & Background Music – Enhances player immersion
+
+🕹️ **Game Mechanics**
+
+Zombies spawn from the left and move towards the right edge of the screen.
+Robots are deployed from the right and move leftward, destroying zombies on contact.
+Explosions are triggered upon collisions, providing visual feedback.
+Lives are lost if a zombie reaches the right edge.
+Score increases with each zombie eliminated.
+
+🛠 **Hardware Setup**
+
 Components:
-- Arduino Uno
-- Joystick module
-- 3 LEDs (Player, Enemy, Game State)
-- Breadboard & jumper wires
-Controls:
-- Joystick Button Press Deploy robot
-Page 1
-Zombie vs. Robots Game Documentation
-- LED Feedback:
-- Red: Player hit
-- Blue: Enemy hit
-- Green: Game is running
-Serial Communication
-Communication occurs between Arduino and browser using Web Serial API:
-- GAME_ON, GAME_OFF, PLAYER_HIT, ENEMY_HIT commands
-- Joystick input triggers 'DEPLOY' from Arduino to browser
-Code Structure
-- sketch.js Main game logic, visuals, sound, and serial interaction
-- zombie_vs_robots.ino Arduino joystick/LED controller logic
-- assets/ Sprite sheets and sound files
-Future Improvements
-- Add multiple robot types with unique abilities
-- Introduce zombie variants (fast, armored)
-- Health bars, wave system, and power-ups
-- Multiplayer mode with 2-player joystick input
-- Persistent high-score tracking
-Page 2
+Arduino Uno
+Joystick module with built-in button
+3 LEDs (Red, Blue, Green)
+Breadboard & jumper wires
+Physical Controls:
+Joystick Button Press – Deploys a robot
+LED Indicators:
+🔴 Red LED: Player hit
+🔵 Blue LED: Zombie eliminated
+🟢 Green LED: Game active
+
+**Serial Communication**
+
+The game uses the Web Serial API for real-time interaction between the Arduino and the browser.
+
+Commands:
+GAME_ON / GAME_OFF – Controls game start and end states
+PLAYER_HIT – Triggers red LED and deducts a life
+ENEMY_HIT – Triggers blue LED and adds score
+DEPLOY – Sent from Arduino to browser when joystick button is pressed
+
+🧾 **Code Structure**
+
+sketch.js – Core game logic including rendering, sound, collision detection, and serial communication
+zombie_vs_robots.ino – Arduino script for reading joystick input and controlling LEDs
+assets/ – Folder containing sprite sheets and sound files
+🚀 Future Improvements
+
+Add multiple robot types with distinct abilities (e.g., ranged attack, AoE explosion)
+Introduce zombie variants such as fast movers and armored tanks
+Include health bars, a wave system, and random power-ups
+Enable 2-player multiplayer using dual joystick inputs
+Add persistent high-score tracking with local storage or database integration
